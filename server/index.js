@@ -12,8 +12,10 @@ app.post('/webhook', (req, res) => {
   const event = req.headers['x-github-event'];
   const payload = req.body;
 
-  console.log(`📩 Received GitHub event: ${event}`); // Add this
+  // 🔍 Always log event received
+  console.log(`📩 Received GitHub event: ${event}`);
 
+  // ✅ Detect merged pull requests
   if (event === 'pull_request' && payload.action === 'closed' && payload.pull_request.merged) {
     const pr = payload.pull_request;
     const mergedAt = new Date(pr.merged_at);
