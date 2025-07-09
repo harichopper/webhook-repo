@@ -14,23 +14,21 @@ app.post('/webhook', (req, res) => {
 
   console.log(`📩 Received GitHub event: ${event}`);
 
-  // 👇 Debug: Print full pull_request payload
   if (event === 'pull_request') {
-    console.log(JSON.stringify(payload, null, 2));
-  }
-
-  if (event === 'pull_request' && payload.action === 'closed' && payload.pull_request.merged) {
-    const pr = payload.pull_request;
-    const mergedAt = new Date(pr.merged_at);
-
-    if (!lastProcessedTime || mergedAt > lastProcessedTime) {
+    console.log(`🧪 Action: ${payload.action}`);
+    console.log(`🧪 Merged: ${payload.pull_request?.merged}`);
+    console.log(`🧪 Merged_at: ${payload.pull_request?.merged_at}`);
+    
+    if (payload.action === 'closed' && payload.pull_request.merged) {
+      const pr = payload.pull_request;
+      const mergedAt = new Date(pr.merged_at);
       console.log(`✅ Merged PR: "${pr.title}" by ${pr.user.login} on ${mergedAt.toISOString()}`);
-      lastProcessedTime = mergedAt;
     }
   }
 
   res.sendStatus(200);
 });
+
 
 
 app.listen(PORT, () => {
