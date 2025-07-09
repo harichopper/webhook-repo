@@ -12,10 +12,13 @@ app.post('/webhook', (req, res) => {
   const event = req.headers['x-github-event'];
   const payload = req.body;
 
-  // 🔍 Always log event received
   console.log(`📩 Received GitHub event: ${event}`);
 
-  // ✅ Detect merged pull requests
+  // 👇 Debug: Print full pull_request payload
+  if (event === 'pull_request') {
+    console.log(JSON.stringify(payload, null, 2));
+  }
+
   if (event === 'pull_request' && payload.action === 'closed' && payload.pull_request.merged) {
     const pr = payload.pull_request;
     const mergedAt = new Date(pr.merged_at);
@@ -28,6 +31,7 @@ app.post('/webhook', (req, res) => {
 
   res.sendStatus(200);
 });
+
 
 app.listen(PORT, () => {
   console.log(`🚀 Webhook server listening at http://localhost:${PORT}/webhook`);
